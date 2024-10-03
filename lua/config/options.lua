@@ -19,10 +19,14 @@ opt.mouse = "a"       -- enable mouse mode
 opt.smartcase = true  -- Don't ignore case with capitals
 opt.winminwidth = 5   -- Minimum window width
 opt.sidescrolloff = 8 -- Columns of context
-vim.o.foldcolumn = "0"
---vim.o.foldenable = false
+
+-- if 0 don't use vims foldcolumn, use statuscolumn instead
+-- if 1 we use the foldcolumn but only one column (statuscol plugin would handle this internally)
+vim.o.foldcolumn = "1"
+vim.o.foldenable = true
 vim.opt.foldlevel = 99
-vim.opt.foldmethod = "indent"
+vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]] -- nice icons for folding
+-- vim.opt.foldmethod = "indent"
 
 
 -- status column setup (uses the function in ui.lua)

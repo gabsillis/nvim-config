@@ -3,14 +3,14 @@ local function augroup(name)
 end
 
 -- Folds based on treesitter or syntax highlighting otherwise
-vim.api.nvim_create_autocmd({ "FileType" }, {
-    pattern = { "cpp", "hpp", "lua", "rs" },
-    callback = function()
-        vim.opt.foldmethod = "expr"
-        vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-        vim.opt.foldtext = 'v:lua.vim.treesitter.foldtext()'
-    end,
-})
+-- vim.api.nvim_create_autocmd({ "FileType" }, {
+--     pattern = { "cpp", "hpp", "lua", "rs" },
+--     callback = function()
+--         vim.opt.foldmethod = "expr"
+--         vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+--         vim.opt.foldtext = 'v:lua.vim.treesitter.foldtext()'
+--     end,
+-- })
 
 -- Disable autoformat for cpp files
 vim.api.nvim_create_autocmd({ "FileType" }, {

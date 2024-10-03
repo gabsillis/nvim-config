@@ -1,7 +1,28 @@
+EmptyClickHandler = function() end
+
+FoldClickHandler = function()
+    local mousepos = vim.fn.getmousepos();
+    local lnum = mousepos.line;
+    local foldlevel = vim.fn.foldlevel(lnum);
+    local foldclosed = vim.fn.foldclosed(lnum);
+    local foldlevel_before = vim.fn.foldlevel((lnum - 1) >= 1 and lnum - 1 or 1);
+
+    -- set the cursor position to the clicked position
+    local pos = vim.api.nvim_win_get_cursor(0);
+    vim.api.nvim_win_set_cursor(0, { lnum, pos[2] });
+
+    if (foldclosed ~= -1) then
+        vim.api.nvim_input("zo");
+    elseif (foldlevel > foldlevel_before) then
+        vim.api.nvim_input("zc");
+    end
+end
+
 -- Returns a list of regular and extmark signs sorted by priority (low to high)
 ---@return Sign[]
 ---@param buf number
 ---@param lnum number
+---
 local get_signs = function(buf, lnum)
     -- Get regular signs
     ---@type Sign[]
@@ -145,6 +166,7 @@ return {
         local buf = vim.api.nvim_win_get_buf(win);
         local is_file = vim.bo[buf].buftype == "";
         local show_signs = vim.wo[win].signcolumn ~= "no";
+        local u = require("util.util")
 
         -- colorscheme colors
         local tn_colors = require("tokyonight.colors").setup()
@@ -166,9 +188,16 @@ return {
             vim.api.nvim_set_hl(0, "StatuslineGradientFG_" .. i, { fg = color });
             vim.api.nvim_set_hl(0, "StatuslineGradientBG_" .. i, { bg = color });
         end
+
+        -- standard colors
+        vim.api.nvim_set_hl(0, "StatuslineCurrentNumber", { fg = tn_colors.orange, bold = true });
+        vim.api.nvim_set_hl(0, "NormalNumber", { fg = tn_colors.fg_gutter, bold = false });
+        vim.api.nvim_set_hl(0, "FoldColor", { fg = tn_colors.fg, bg = tn_colors.bg_dark, bold = true });
+        vim.api.nvim_set_hl(0, "ResetColors", { fg = tn_colors.fg_gutter, bg = tn_colors.bg, bold = false });
+
         -- Border
 
-        local border = function()
+        local my_border = function()
             if vim.v.relnum < 9 then
                 return "%#StatuslineGradientFG_" .. (vim.v.relnum + 1) .. "#│";
             else
@@ -177,7 +206,7 @@ return {
         end
 
         local apply_bg_gradient = function()
-            if vim.v.relnum < 9 then
+            if vim.v and vim.v.relnum < 9 then
                 return "%#StatuslineGradientBG_" .. (vim.v.relnum + 1) .. "#";
             else
                 return "%#StatuslineGradientBG_10#";
@@ -206,21 +235,23 @@ return {
 
             -- Line is a closed fold(I know second condition feels unnecessary but I will still add it)
             if foldclosed ~= -1 and foldclosed == vim.v.lnum then
-                return "▶";
+                return "";
             end
 
             -- I didn't use ~= because it couldn't make a nested fold have a lower level than it's parent fold and it's not something I would use
             if foldlevel > foldlevel_before then
-                return "▽"
+                return ""
             end
 
             -- The line is the last line in the fold
             if foldlevel > foldlevel_after then
-                return "╰";
+                --  return "╰";
+                return " ";
             end
 
             -- Line is in the middle of an open fold
-            return "╎";
+            -- return "╎";
+            return " ";
         end
 
         -- signs
@@ -234,18 +265,11 @@ return {
                 left = s
             end
         end
-        -- Left: mark or non-git sign
-        local left_icon = icon(get_mark(buf, vim.v.lnum) or left)
-        --
-        local git_or_fold_icon = icon(right);
-        if (right == nil) then
-            git_or_fold_icon = folds()
-        end
 
-
+        -- consolidate all marks, giving preference to diagnostics
+        local icon_consolidated = icon(get_mark(buf, vim.v.lnum) or left or right)
 
         local number = function()
-            vim.api.nvim_set_hl(0, "StatuslineCurrentNumber", { fg = tn_colors.orange, bold = true });
             local output;
 
             -- Adapted from LazyVim
@@ -264,7 +288,7 @@ return {
                         output = is_relnum and "%r" or "%l" -- other lines
                     end
                 end
-                output = "%=" .. output .. "" -- right align
+                output = "%=" .. output .. my_border() .. "" -- right align
             end
 
             if vim.v.virtnum ~= 0 then
@@ -275,10 +299,14 @@ return {
         end;
 
         return table.concat({
-            git_or_fold_icon,
-            left_icon,
+            "%#FoldColor#",
+            "%@v:lua.FoldClickHandler@",
+            folds(), -- fold
+            "%#ResetColors#",
+            "%@v:lua.EmptyClickHandler@",
+            icon_consolidated,
+            -- WARNING: nothing can go after cause right align and redraw break with concat
             number(),
-            border(),
         });
     end,
 
