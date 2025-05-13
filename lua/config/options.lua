@@ -9,7 +9,8 @@ local opt = vim.opt
 opt.shiftwidth = 4
 opt.tabstop = 4
 opt.expandtab = true
-opt.smartindent = true
+opt.cindent = true
+opt.cinoptions = [[0,g0,j1]]
 
 opt.confirm = true -- Confirm to save changes before exiting modified buffer
 vim.wo.number = true
