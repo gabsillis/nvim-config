@@ -29,6 +29,8 @@ vim.opt.foldlevel = 99
 vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]] -- nice icons for folding
 -- vim.opt.foldmethod = "indent"
 
+-- clipboard use the same as system
+vim.opt.clipboard = "unnamedplus"
 
 -- status column setup (uses the function in ui.lua)
 vim.o.statuscolumn = [[%!v:lua.require'config.ui'.statuscolumn()]];

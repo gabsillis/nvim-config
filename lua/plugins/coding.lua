@@ -1,66 +1,21 @@
 return {
 
-    -- LSP setup
     {
-        'neovim/nvim-lspconfig',
-        event = { "BufReadPre", "BufWritePost", "BufNewFile" },
-
-        dependencies = {
-            'williamboman/mason-lspconfig.nvim',
-            dependencies = { 'williamboman/mason.nvim', command = "Mason" },
-
-            config = function()
-                require('mason-lspconfig').setup({
-                    ensure_installed = {
-                        'clangd',
-                        'lua_ls',
-                        'rust_analyzer'
-                    },
-                })
-                -- automagiacally set up newly installed servers
-                require("mason-lspconfig").setup_handlers {
-
-                    -- default handler
-                    function(server_name)
-                        require("lspconfig")[server_name].setup {}
-                    end,
-
-                    -- custom handlers here
-                    ["lua_ls"] = function()
-                        require("lspconfig")["lua_ls"].setup {
-                            on_init = function(client)
-                                if client.workspace_folders then
-                                    local path = client.workspace_folders[1].name;
-                                    if vim.loop.fs_stat(path .. '/.luarc.json') or vim.loop.fs_stat(path .. '/.luarc.jsonc') then
-                                        return
-                                    end
-                                end
-
-                                client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
-                                    runtime = { version = 'LuaJIT' },
-                                    workspace = {
-                                        checkThirdParty = false,
-                                        library = { vim.env.VIMRUNTIME }
-                                    },
-                                })
-                            end,
-                            settings = {
-                                Lua = {}
-                            }
-                        }
-                    end,
-                }
-            end,
-        }
-    },
-    {
-        'williamboman/mason.nvim',
+        'mason-org/mason.nvim',
         keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
         opts = {
             ui = { border = 'single' },
             PATH = 'append',
         },
         config = function(_, opts) require('mason').setup(opts) end,
+    },
+    {
+        "mason-org/mason-lspconfig.nvim",
+        opts = {},
+        dependencies = {
+            { "mason-org/mason.nvim", opts = {} },
+            "neovim/nvim-lspconfig",
+        },
     },
 
     -- Treesitter
@@ -88,6 +43,7 @@ return {
         opts = {
             highlight = { enable = true },
             indent = { enable = false },
+            ignore_install = { "latex" },
             ensure_installed = {
                 "bash",
                 "c",
@@ -205,4 +161,7 @@ return {
             });
         end,
     },
+
+    -- repl for debugging lua 
+    { 'rafcamlet/nvim-luapad', requires = "antoinemadec/FixCursorHold.nvim" }
 }

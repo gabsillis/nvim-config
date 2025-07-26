@@ -14,13 +14,13 @@ return {
   },
 
   -- vimtex for LaTeX
-  {
-    "lervag/vimtex",
-    lazy = false,
-    init = function()
-      -- VimTeX configuration goes here, e.g.
-      vim.g.vimtex_view_method = "general"
-      vim.g.vimtex_compiler_method = "latexmk"
-    end,
-  },
+  -- {
+  --   "lervag/vimtex",
+  --   lazy = false,
+  --   init = function()
+  --     -- VimTeX configuration goes here, e.g.
+  --     vim.g.vimtex_view_method = "general"
+  --     vim.g.vimtex_compiler_method = "latexmk"
+  --   end,
+  -- },
 }

@@ -12,6 +12,13 @@ end
 --     end,
 -- })
 
+-- re-render on cursor movement for the statuscolumn
+vim.api.nvim_create_autocmd({'CursorMovedI'}, {
+  callback = function() 
+    vim.cmd('redraw!')
+  end
+})
+
 -- Disable autoformat for cpp files
 vim.api.nvim_create_autocmd({ "FileType" }, {
     pattern = { "cpp", "hpp" },
