@@ -15,10 +15,10 @@ opt.cinoptions = [[0,g0,j1]]
 opt.confirm = true -- Confirm to save changes before exiting modified buffer
 vim.wo.number = true
 vim.wo.relativenumber = true
-opt.list = true       -- Show some invisible characters (tabs...
-opt.mouse = "a"       -- enable mouse mode
-opt.smartcase = true  -- Don't ignore case with capitals
-opt.winminwidth = 5   -- Minimum window width
+opt.list = true -- Show some invisible characters (tabs...
+opt.mouse = "a" -- enable mouse mode
+opt.smartcase = true -- Don't ignore case with capitals
+opt.winminwidth = 5 -- Minimum window width
 opt.sidescrolloff = 8 -- Columns of context
 
 -- if 0 don't use vims foldcolumn, use statuscolumn instead
@@ -33,4 +33,6 @@ vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]] -- nice 
 vim.opt.clipboard = "unnamedplus"
 
 -- status column setup (uses the function in ui.lua)
-vim.o.statuscolumn = [[%!v:lua.require'config.ui'.statuscolumn()]];
+vim.o.statuscolumn = [[%!v:lua.require'config.ui'.statuscolumn()]]
+-- colorscheme colors (we set up the highlight in the tokyonight setup)
+vim.o.cursorline = true

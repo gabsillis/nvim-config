@@ -9,6 +9,10 @@ return {
     config = function()
       -- load the colorscheme here
       vim.cmd([[colorscheme tokyonight]])
+
+      -- set the cursor highlight
+      local tn_colors = require("tokyonight.colors").setup()
+      vim.api.nvim_set_hl(0, "CursorLine", { bg = tn_colors.bg_dark})
     end,
   },
 

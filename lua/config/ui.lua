@@ -278,7 +278,8 @@ return {
 				if is_relnum then
 					actual_relnum = vim.v.relnum
 				else
-					actual_relnum = math.abs(vim.fn.line(".") - vim.v.lnum)
+					-- actual_relnum = math.abs(vim.fn.line(".") - vim.v.lnum)
+          actual_relnum = 100 -- too expensive to calculate so we turn off everywhere
 				end
 				if vim.fn.has("nvim-0.11") == 1 then
 					if actual_relnum == 0 then
