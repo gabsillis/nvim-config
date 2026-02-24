@@ -153,15 +153,23 @@ return {
 
                 formatters_by_ft = {
                     lua = { "stylua", lsp_format = "fallback" },
+                    cpp = { "clang_format" },
+                    c = { "clang_format" }
                 },
 
-                format_on_save = {
-                    timeout_ms = 500,
-                },
+                format_on_save = function(bufnr)
+                    if vim.bo[bufnr].filetype == "cpp" then
+                        return nil
+                    end
+                    return {
+                        timeout_ms = 500,
+                        lsp_fallback = true,
+                    }
+                end,
             });
         end,
     },
 
-    -- repl for debugging lua 
+    -- repl for debugging lua
     { 'rafcamlet/nvim-luapad', requires = "antoinemadec/FixCursorHold.nvim" }
 }

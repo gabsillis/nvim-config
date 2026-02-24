@@ -34,9 +34,9 @@ vim.keymap.set("t", "<C-h>", "<backspace>")
 
 -- code keymaps 
 vim.keymap.set({ 'n', 'v' }, "<leader>cf", function()
-        vim.lsp.buf.format()
+        require("conform").format({ lsp_fallback = true })
     end,
-    { desc = "format the code with lsp formatter" }
+    { desc = "format the code with formatter" }
 )
 vim.keymap.set({ 'n', 'v' }, "<leader>ca",
     vim.lsp.buf.code_action, { desc = "[c]ode [a]ction" })
