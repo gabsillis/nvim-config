@@ -25,14 +25,14 @@ vim.keymap.set({ 'n', 'v' }, "gy",
 vim.keymap.set({ 'n', 'v' }, "gD",
     vim.lsp.buf.declaration, { desc = "[g]oto [d]eclaration" })
 vim.keymap.set({ 'n', 'v' }, "K",
-    vim.lsp.buf.hover , { desc = "hover" })
+    vim.lsp.buf.hover, { desc = "hover" })
 vim.keymap.set({ 'n', 'v' }, "gK",
     vim.lsp.buf.signature_help, { desc = "signature help" })
 
 -- fix terminal backspace
 vim.keymap.set("t", "<C-h>", "<backspace>")
 
--- code keymaps 
+-- code keymaps
 vim.keymap.set({ 'n', 'v' }, "<leader>cf", function()
         require("conform").format({ lsp_fallback = true })
     end,
@@ -43,11 +43,14 @@ vim.keymap.set({ 'n', 'v' }, "<leader>ca",
 
 -- diagnostic
 local diagnostic_goto = function(next, severity)
-  local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
-  severity = severity and vim.diagnostic.severity[severity] or nil
-  return function()
-    go({ severity = severity })
-  end
+    severity = severity and vim.diagnostic.severity[severity] or nil
+    return function()
+        vim.diagnostic.jump({
+            count = next and 1 or -1,
+            severity = severity,
+            float = true,
+        })
+    end
 end
 vim.keymap.set("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
 vim.keymap.set("n", "]d", diagnostic_goto(true), { desc = "Next Diagnostic" })

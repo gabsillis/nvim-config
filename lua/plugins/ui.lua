@@ -12,7 +12,7 @@ return {
 
       -- set the cursor highlight
       local tn_colors = require("tokyonight.colors").setup()
-      vim.api.nvim_set_hl(0, "CursorLine", { bg = tn_colors.bg_dark})
+      vim.api.nvim_set_hl(0, "CursorLine", { bg = tn_colors.bg_dark })
     end,
   },
 
@@ -152,7 +152,7 @@ return {
       },
       default_component_configs = {
         indent = {
-          with_expanders = true,           -- if nil and file nesting is enabled, will enable expanders
+          with_expanders = true, -- if nil and file nesting is enabled, will enable expanders
           expander_collapsed = "",
           expander_expanded = "",
           expander_highlight = "NeoTreeExpander",
@@ -191,16 +191,16 @@ return {
         override = {
           ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
           ["vim.lsp.util.stylize_markdown"] = true,
-          ["cmp.entry.get_documentation"] = true,           -- requires hrsh7th/nvim-cmp
+          ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
         },
       },
       -- you can enable a preset for easier configuration
       presets = {
-        bottom_search = true,                 -- use a classic bottom cmdline for search
-        command_palette = true,               -- position the cmdline and popupmenu together
-        long_message_to_split = true,         -- long messages will be sent to a split
-        inc_rename = false,                   -- enables an input dialog for inc-rename.nvim
-        lsp_doc_border = false,               -- add a border to hover docs and signature help
+        bottom_search = true,         -- use a classic bottom cmdline for search
+        command_palette = true,       -- position the cmdline and popupmenu together
+        long_message_to_split = true, -- long messages will be sent to a split
+        inc_rename = false,           -- enables an input dialog for inc-rename.nvim
+        lsp_doc_border = false,       -- add a border to hover docs and signature help
       },
     }
   },
@@ -356,13 +356,6 @@ return {
         dynamicRegistration = false,
         lineFoldingOnly = true
       }
-      local language_servers = require("lspconfig").util.available_servers()       -- or list servers manually like {'gopls', 'clangd'}
-      for _, ls in ipairs(language_servers) do
-        require('lspconfig')[ls].setup({
-          capabilities = capabilities
-          -- you can add other fields for setting up lsp server in this table
-        })
-      end
       require('ufo').setup({})
     end,
   },

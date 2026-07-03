@@ -1,5 +1,13 @@
 return {
 
+    -- treesitter config auto installation
+    {
+        'nvim-treesitter/nvim-treesitter',
+        lazy = false,
+        build = ':TSUpdate',
+    },
+
+
     {
         'mason-org/mason.nvim',
         keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
@@ -9,74 +17,14 @@ return {
         },
         config = function(_, opts) require('mason').setup(opts) end,
     },
-    {
-        "mason-org/mason-lspconfig.nvim",
-        opts = {},
-        dependencies = {
-            { "mason-org/mason.nvim", opts = {} },
-            "neovim/nvim-lspconfig",
-        },
-    },
-
-    -- Treesitter
-    {
-        "nvim-treesitter/nvim-treesitter",
-        version = false,
-        build = ":TSUpdate",
-        event = { "BufReadPre", "BufWritePost", "BufNewFile", "VeryLazy" },
-        lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening file from the cmdline
-        init = function(plugin)
-            -- PERF: add nvim-treesitter queries to the rtp and it's custom query predicates early
-            -- This is needed because a bunch of plugins no longer `require("nvim-treesitter")`, which
-            -- no longer trigger the **nvim-treesitter** module to be loaded in time.
-            -- Luckily, the only things that those plugins need are the custom queries, which we make available
-            -- during startup.
-            require("lazy.core.loader").add_to_rtp(plugin);
-            require("nvim-treesitter.query_predicates");
-        end,
-        cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
-        keys = {
-            { "<c-space>", desc = "Increment Selection" },
-            { "<bs>",      desc = "Decrement Selection", mode = "x" },
-        },
-
-        opts = {
-            highlight = { enable = true },
-            indent = { enable = false },
-            ignore_install = { "latex" },
-            ensure_installed = {
-                "bash",
-                "c",
-                "cpp",
-                "diff",
-                "html",
-                "javascript",
-                "jsdoc",
-                "json",
-                "jsonc",
-                "lua",
-                "luadoc",
-                "luap",
-                "markdown",
-                "markdown_inline",
-                "printf",
-                "python",
-                "query",
-                "regex",
-                "toml",
-                "tsx",
-                "typescript",
-                "vim",
-                "vimdoc",
-                "xml",
-                "yaml",
-            },
-        },
-        ---@param opts TSConfig
-        config = function(_, opts)
-            require("nvim-treesitter.configs").setup(opts)
-        end,
-    },
+    -- {
+    --     "mason-org/mason-lspconfig.nvim",
+    --     opts = {},
+    --     dependencies = {
+    --         { "mason-org/mason.nvim", opts = {} },
+    --         "neovim/nvim-lspconfig",
+    --     },
+    -- },
 
     -- auto pair braces and stuff
     {
@@ -171,5 +119,21 @@ return {
     },
 
     -- repl for debugging lua
-    { 'rafcamlet/nvim-luapad', requires = "antoinemadec/FixCursorHold.nvim" }
+    { 'rafcamlet/nvim-luapad', requires = "antoinemadec/FixCursorHold.nvim" },
+
+    -- LEAN integration
+    {
+        "Julian/lean.nvim",
+        event = { "BufReadPre *.lean", "BufNewFile *.lean" },
+        dependencies = {
+            -- "neovim/nvim-lspconfig",
+            "nvim-lua/plenary.nvim",
+            -- optional but recommended:
+            "hrsh7th/nvim-cmp", -- completion
+            "hrsh7th/cmp-nvim-lsp",
+        },
+        opts = {
+            mappings = true, -- enables default keymaps
+        },
+    },
 }

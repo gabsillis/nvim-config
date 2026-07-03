@@ -36,10 +36,20 @@ local function get_clangd_cmd()
     -- end
     return {
         "clangd",
-        "--clang-tidy",
-        "--header-insertion=never"
+        "--header-insertion=never",
+        "--log=error",
+        "--malloc-trim"
     }
 end
+
+local clang_capabilities = vim.lsp.protocol.make_client_capabilities()
+clang_capabilities.general.positionEncodings = { "utf-16" }
+
 vim.lsp.config('clangd', {
+    filetypes = { 'c', 'cpp', 'hpp', 'cuda' },
     cmd = get_clangd_cmd(),
+    capabilities = clang_capabilities
 })
+
+vim.lsp.log.set_level(vim.log.levels.WARN)
+vim.lsp.enable('clangd')

@@ -37,3 +37,6 @@ require("lazy").setup({
     -- automatically check for plugin updates
     checker = { enabled = true },
 })
+
+-- Setup tresitter
+require('nvim-treesitter').install({ 'rust', 'cpp', 'lua' }):wait(300000)
