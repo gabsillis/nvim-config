@@ -21,8 +21,8 @@ end
 --})
 
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'cpp', 'hpp' },
-  callback = function() vim.treesitter.start() end,
+  pattern = { 'cpp', 'rust', 'lua' },
+  callback = function() pcall(vim.treesitter.start) end,
 })
 
 -- Disable autoformat for cpp files

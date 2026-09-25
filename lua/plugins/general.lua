@@ -8,7 +8,8 @@ return {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     ft = { "markdown" },
-    build = function()
+    build = function(plugin)
+      vim.cmd.source(vim.fs.joinpath(plugin.dir, "autoload", "mkdp", "util.vim"))
       vim.fn["mkdp#util#install"]()
     end,
   },

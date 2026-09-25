@@ -21,22 +21,22 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
+require("config.options")
+require("config.keybinds")
+require("config.autocmds")
+require("config.coding")
+
 -- Setup lazy.nvim
 require("lazy").setup({
-    require("config.coding"),
     spec = {
         -- import your plugins
         { import = "plugins" },
     },
-    require("config.options"),
-    require("config.keybinds"),
-    require("config.autocmds"),
+    -- The config directory may be a read-only mount or symlink.
+    lockfile = vim.fn.stdpath("state") .. "/lazy-lock.json",
     -- Configure any other settings here. See the documentation for more details.
     -- colorscheme that will be used when installing plugins.
     install = { colorscheme = { "tokyonight", "habamax" } },
     -- automatically check for plugin updates
     checker = { enabled = true },
 })
-
--- Setup tresitter
-require('nvim-treesitter').install({ 'rust', 'cpp', 'lua' }):wait(300000)

@@ -1,21 +1,61 @@
 return {
 
-    -- treesitter config auto installation
+    {
+        'mason-org/mason.nvim',
+        lazy = false,
+        keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
+        opts = {
+            ui = { border = 'single' },
+            PATH = 'prepend',
+        },
+    },
+
+    {
+        'WhoIsSethDaniel/mason-tool-installer.nvim',
+        lazy = false,
+        dependencies = { 'mason-org/mason.nvim' },
+        opts = {
+            ensure_installed = { 'tree-sitter-cli' },
+            run_on_start = false,
+        },
+    },
+
+    -- nvim-treesitter's main branch is the rewritten API for Neovim 0.12.
     {
         'nvim-treesitter/nvim-treesitter',
         lazy = false,
         build = ':TSUpdate',
-    },
+        dependencies = { 'WhoIsSethDaniel/mason-tool-installer.nvim' },
+        config = function()
+            local parsers = { 'rust', 'cpp', 'lua' }
 
+            local function has_tree_sitter_cli()
+                if vim.fn.executable('tree-sitter') ~= 1 then
+                    return false
+                end
 
-    {
-        'mason-org/mason.nvim',
-        keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
-        opts = {
-            ui = { border = 'single' },
-            PATH = 'append',
-        },
-        config = function(_, opts) require('mason').setup(opts) end,
+                local result = vim.system({ 'tree-sitter', '--version' }, { text = true }):wait()
+                local version = result.code == 0 and vim.version.parse(result.stdout) or nil
+                return version ~= nil and vim.version.ge(version, { 0, 26, 1 })
+            end
+
+            local function install_parsers()
+                if has_tree_sitter_cli() then
+                    require('nvim-treesitter').install(parsers)
+                    return true
+                end
+                return false
+            end
+
+            if not install_parsers() then
+                vim.api.nvim_create_autocmd('User', {
+                    pattern = 'MasonToolsUpdateCompleted',
+                    once = true,
+                    callback = install_parsers,
+                })
+                vim.cmd('MasonToolsInstall')
+            end
+        end,
     },
     -- {
     --     "mason-org/mason-lspconfig.nvim",
