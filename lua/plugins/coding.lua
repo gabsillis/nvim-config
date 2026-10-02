@@ -27,7 +27,7 @@ return {
         build = ':TSUpdate',
         dependencies = { 'WhoIsSethDaniel/mason-tool-installer.nvim' },
         config = function()
-            local parsers = { 'rust', 'cpp', 'lua' }
+            local parsers = { 'rust', 'cpp', 'lua', 'markdown', 'markdown_inline' }
 
             local function has_tree_sitter_cli()
                 if vim.fn.executable('tree-sitter') ~= 1 then
