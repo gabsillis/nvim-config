@@ -51,7 +51,7 @@ local function get_clangd_cmd()
         "clangd",
         "--header-insertion=never",
         "--log=error",
-        "--malloc-trim",
+--        "--malloc-trim",
         "--pch-storage=disk",     -- preambles to disk, not RAM
         "-j=" .. INDEX_JOBS,
         "--limit-references=100",
